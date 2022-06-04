@@ -2,58 +2,9 @@ import { StyleSheet, View, Text, Image, ScrollView } from "react-native";
 import React from "react";
 import { Divider } from "react-native-elements";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-
-const foods = [
-  {
-    title: "Pizza",
-    description: "Pizzaaa aa a a ",
-    price: "$13.50",
-    image:
-      "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-  },
-  {
-    title: "Pizza",
-    description: "Pizzaaa aa a a ",
-    price: "$13.50",
-    image:
-      "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-  },
-  {
-    title: "Pizza",
-    description: "Pizzaaa aa a a ",
-    price: "$13.50",
-    image:
-      "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-  },
-  {
-    title: "Pizza",
-    description: "Pizzaaa aa a a ",
-    price: "$13.50",
-    image:
-      "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-  },
-  {
-    title: "Pizza",
-    description: "Pizzaaa aa a a ",
-    price: "$13.50",
-    image:
-      "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-  },
-  {
-    title: "Pizza",
-    description: "Pizzaaa aa a a ",
-    price: "$13.50",
-    image:
-      "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-  },
-  {
-    title: "Pizza",
-    description: "Pizzaaa aa a a ",
-    price: "$13.50",
-    image:
-      "https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
-  },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { cartAction } from "../../store/cartSlice";
+import { Foods } from "../../helper/Foods";
 
 const styles = StyleSheet.create({
   menuItemStyle: {
@@ -67,15 +18,27 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function MenuItems() {
+export default function MenuItems({ restaurantName }) {
+  const dispatch = useDispatch();
+
+  const selectItem = (food, checkboxValue) =>
+    dispatch(cartAction.addToCart({ ...food, restaurantName, checkboxValue }));
+
+  const cartItemsTemp = useSelector((state) => state.cart);
+  const cartItems = cartItemsTemp.selectedItem.items;
+  const isFoodInCart = (food, cartItems) =>
+    Boolean(cartItems.find((item) => item.title == food.title));
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
-      {foods.map((food, index) => (
+      {Foods.map((food, index) => (
         <View key={index}>
           <View style={styles.menuItemStyle}>
             <BouncyCheckbox
               iconStyle={{ borderColor: "lightgray", borderRadius: 0 }}
               fillColor="green"
+              onPress={(checkboxValue) => selectItem(food, checkboxValue)}
+              isChecked={isFoodInCart(food, cartItems)}
             />
             <FoodInfo food={food} />
             <FoodImage food={food} />

@@ -20,6 +20,7 @@ const Home = ({ navigation }) => {
   const [restaurantData, setRestaurantData] = useState();
   const [city, setCity] = useState("San Diego");
   const [activeTab, setActiveTab] = useState("Delivery");
+  console.log("Home Page");
   const getRestaurantsFromYelp = async () => {
     const yelpURL = `https://api.yelp.com/v3/businesses/search?term=restaurants&location=${city}`;
 
