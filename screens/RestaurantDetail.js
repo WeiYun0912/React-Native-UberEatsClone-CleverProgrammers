@@ -5,7 +5,7 @@ import About from "../components/restaurantDetail/About";
 import MenuItems from "../components/restaurantDetail/MenuItems";
 import { Divider } from "react-native-elements";
 import ViweCart from "../components/restaurantDetail/ViewCart";
-
+import { Foods } from "../helper/Foods";
 export default function RestaurantDetail({ route, navigation }) {
   return (
     <View>
@@ -13,8 +13,8 @@ export default function RestaurantDetail({ route, navigation }) {
 
       <Divider width={1.8} style={{ marginVertical: 20 }} />
 
-      <MenuItems restaurantName={route.params.name} />
-      <ViweCart navigation={navigation} restaurantName={route.params.name} />
+      <MenuItems restaurantName={route.params.name} Foods={Foods} />
+      <ViweCart navigation={navigation} />
     </View>
   );
 }

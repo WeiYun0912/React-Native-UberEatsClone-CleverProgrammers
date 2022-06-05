@@ -4,7 +4,6 @@ import { Divider } from "react-native-elements";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { cartAction } from "../../store/cartSlice";
-import { Foods } from "../../helper/Foods";
 
 const styles = StyleSheet.create({
   menuItemStyle: {
@@ -18,7 +17,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function MenuItems({ restaurantName }) {
+export default function MenuItems({
+  restaurantName,
+  hideCheckbox,
+  Foods,
+  marginLeft,
+}) {
   const dispatch = useDispatch();
 
   const selectItem = (food, checkboxValue) =>
@@ -30,18 +34,23 @@ export default function MenuItems({ restaurantName }) {
     Boolean(cartItems.find((item) => item.title == food.title));
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView showsVerticalScrollIndicator={false} style={{ height: "100%" }}>
       {Foods.map((food, index) => (
         <View key={index}>
           <View style={styles.menuItemStyle}>
-            <BouncyCheckbox
-              iconStyle={{ borderColor: "lightgray", borderRadius: 0 }}
-              fillColor="green"
-              onPress={(checkboxValue) => selectItem(food, checkboxValue)}
-              isChecked={isFoodInCart(food, cartItems)}
-            />
+            {hideCheckbox ? (
+              <></>
+            ) : (
+              <BouncyCheckbox
+                iconStyle={{ borderColor: "lightgray", borderRadius: 0 }}
+                fillColor="green"
+                onPress={(checkboxValue) => selectItem(food, checkboxValue)}
+                isChecked={isFoodInCart(food, cartItems)}
+              />
+            )}
+
             <FoodInfo food={food} />
-            <FoodImage food={food} />
+            <FoodImage food={food} marginLeft={marginLeft ? marginLeft : 0} />
           </View>
           <Divider
             width={0.5}
@@ -68,7 +77,12 @@ const FoodImage = (props) => {
       source={{
         uri: props.food.image,
       }}
-      style={{ width: 100, height: 100, borderRadius: 8 }}
+      style={{
+        width: 100,
+        height: 100,
+        borderRadius: 8,
+        marginLeft: props.marginLeft,
+      }}
     />
   );
 };
